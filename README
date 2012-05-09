@@ -1,0 +1,66 @@
+/----------------------------------------------------------------------------\
+|                                                                            |
+|                               DELiC4MT                                     |
+| Diagnostic Evaluation using Linguistic Checkpoints For Machine Translation |
+|                                                                            |
+\----------------------------------------------------------------------------/
+
+VERSION 20120223
+
+
+DELiC4MT is a piece of software that allows to perform diagnostic evaluation of Machine Translation systems over linguistic checkpoints, i.e. source-language lexical elements and grammatical constructions specified by the user. For more details see our paper in the Credits section.
+
+
+
+CHANGELOG
+---------
+20120223 Penalty based on brevity added to Java program
+20120207 Improved treetagger_preserving_tokens_and_lines.pl
+20121215 Added tutorial
+20111213 Added script for filtering checkpoints
+20111129 Added scripts for statistical significance, script that wraps all the stages (delic4mt.sh) and a test folder with 3 use cases (English to Dutch, German and Italian)
+20110724 First release
+
+
+
+CONTENTS
+--------
+
+doc/		Documentation, including a tutorial and a paper
+evaluate/	Java program that carries out the evaluation on linguistic checkpoints
+scripts/	Support scripts
+test/		Sample test data
+
+
+
+CREDITS
+-------
+
+Code by Sudip Naskar and Antonio Toral
+Logo by Pawel Plesniak
+
+
+If you use DELiC4MT in your research please cite the following paper:
+
+Sudip Kumar Naskar, Antonio Toral, Federico Gaspari and Andy Way. A Framework for Diagnostic Evaluation of MT based on Linguistic Checkpoints. In Proceedings of the 13th Machine Translation Summit. Xiamen (China). pp. 529-536. September 2011.
+
+@InProceedings{mtsummit11_delic4mt,
+  author =       {Sudip Kumar Naskar and Antonio Toral and Federico Gaspari and Andy Way},
+  title =        {A Framework for Diagnostic Evaluation of MT based on Linguistic Checkpoints},
+  booktitle =    {Proceedings of the 13th Machine Translation Summit},
+  pages =        {529--536},
+  year =         2011,
+  address =      {Xiamen, China},
+  month =        {September}
+}
+
+
+
+CONTACT
+-------
+
+For any question or suggestion please contact:
+
+Antonio Toral, Sudip Naskar
+atoral, snaskar #-at-# computing dot dcu dot ie
+

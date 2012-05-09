@@ -1,0 +1,410 @@
+\documentclass{article}
+
+\usepackage{url}
+\usepackage{eurosym}
+\usepackage[utf8]{inputenc}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%http://linuxtoosx.blogspot.com/2011/11/latex-verbatim-code-on-box-with.html
+% verbatim boxed text
+\usepackage{fancyvrb,fancybox,calc} 
+\usepackage[svgnames]{xcolor} 
+\newenvironment{verbcode}{\VerbatimEnvironment% 
+  \noindent
+  %      {\columnwidth-\leftmargin-\rightmargin-2\fboxsep-2\fboxrule-4pt} 
+  \begin{Sbox} 
+  \begin{minipage}{\linewidth-2\fboxsep-2\fboxrule-4pt}    
+  \begin{Verbatim}
+}{% 
+  \end{Verbatim}  
+  \end{minipage}   
+  \end{Sbox} 
+  \fcolorbox{black}{LightGray}{\TheSbox} 
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\title{DELiC4MT\\ \large Tutorial}
+\author{Antonio Toral, Sudip Kumar Naskar, Federico Gaspari}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This document contains a step-by-step tutorial for DELiC4MT~\cite{mtsummit11_delic4mt}.\footnote{\url{http://www.computing.dcu.ie/~atoral/delic4mt/
+}}
+It shows the way this tool works by applying it to a case study over a specific language pair, test set and linguistic checkpoint.
+
+
+\section{Set-up and Installation of the Required Software}
+
+First thing, we will create a folder for all the software, data and experiment files:
+
+{\footnotesize
+\begin{verbcode}
+mkdir delic4mt && cd delic4mt
+\end{verbcode}
+}
+
+Next we will install all the software required, i.e. DELiC4MT, a word aligner, a PoS tagger, the Kybot engine and preprocessing tools.
+
+DELiC4MT. You might want to check whether there is a newer version at \url{http://www.computing.dcu.ie/~atoral/delic4mt/}.
+
+{\footnotesize
+\begin{verbcode}
+wget http://www.computing.dcu.ie/~atoral/delic4mt/delic4mt_110818.zip
+unzip delic4mt_110818.zip
+\end{verbcode}
+}
+
+Word aligner, we use GIZA++. Download it:
+
+{\footnotesize
+\begin{verbcode}
+wget http://giza-pp.googlecode.com/files/giza-pp-v1.0.5.tar.gz
+tar -xvzf giza-pp-v1.0.5.tar.gz
+\end{verbcode}
+}
+
+If your version of g++ compiler is 4.4.x (check with \verb&g++ --version&), you need to apply a patch to GIZA++:
+
+{\footnotesize
+\begin{verbcode}
+wget http://www.openmatrex.org/giza-pp.patch
+patch giza-pp/GIZA++-v2/file_spec.h <giza-pp.patch
+\end{verbcode}
+}
+
+Compile GIZA++:
+
+{\footnotesize
+\begin{verbcode}
+cd giza-pp/
+make
+\end{verbcode}
+}
+
+TODO PoS tagger, we use TreeTagger:
+
+{\footnotesize
+\begin{verbcode}
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tree-tagger-linux-3.2.tar.gz
+wget sh install-tagger.sh 
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/english-par-linux-3.1.bin.gz
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/italian-par-linux-3.1.bin.gz
+mkdir treetagger && tar xzvf tree-tagger*gz
+\end{verbcode}
+}
+
+The Kybot engine:
+
+{\footnotesize
+\begin{verbcode}
+svn co https://kyoto.let.vu.nl/svn/kyoto/trunk/modules/mining_module/
+\end{verbcode}
+}
+
+and finally preprocessing tools from Europarl:
+
+{\footnotesize
+\begin{verbcode}
+wget http://www.statmt.org/europarl/v6/tools.tgz
+tar xzvf tools.tgz
+\end{verbcode}
+}
+
+\section{Preparing the test data to be evaluated}
+
+We will use the test data for Italian--English built in the CoSyne project~\cite{eamt11:comparative}.
+
+{\footnotesize
+\begin{verbcode}
+wget http://www.computing.dcu.ie/~atoral/cosyne/D51_1.1.zip
+unzip D51_1.1.zip
+\end{verbcode}
+}
+
+The two files that we will use for illustration purposes are \verb+en-it.it.test+ and \verb+en-it.en.test+ (in folder \verb+D51_1.1/data/en_it/+).
+
+The test set is PoS tagged using TreeTagger.
+%This tagger performs internally sentence-splitting and tokenisation.
+%Since the tokens and sentences need to correspond to those in the alignment, we needed to alter TreeTagger's behaviour.
+%A script (treetagger\_preserving\_tokens\_and\_lines.pl) has been developed for that reason; it receives as input the text tokenised by the Europarl tokeniser (which is applied also in preprocessing the input of the aligner), where each line corresponds to a sentence.
+%Each line is then tokenised to the TreeTagger input format (one token per line) and then TreeTagger is called for each sentence.
+%The output of TreeTagger is post-processed overwriting any end-of-sentence (SENT) POS tag by "OTHER".
+%Finally the tag of the last token of the sentence is overwritten to SENT.
+%The output of this procedure is processed by a script that converts it to the KAF format (treetagger2kaf.pl).
+
+The following pipeline PoS tags the test set:
+
+{\footnotesize
+\begin{verbcode}
+cat D51_1.1/data/en_it/en-it.it.test | perl tools/tokenizer.perl | \
+perl delic4mt_*/scripts/treetagger_preserving_tokens_and_lines.pl italian \
+2> treetagger_it.log | perl delic4mt_*/scripts/treetagger2kaf.pl -ri > en-it.it.test.kaf
+
+cat D51_1.1/data/en_it/en-it.en.test | perl tools/tokenizer.perl | perl \
+delic4mt_*/scripts/treetagger_preserving_tokens_and_lines.pl english \
+2> treetagger_en.log | perl delic4mt_*/scripts/treetagger2kaf.pl -ri > en-it.en.test.kaf
+\end{verbcode}
+}
+
+It follows a sample of the KAF files produced for the Italian--English sentence pair 62 (``[...] la carne americana [...]'', ``[...] American meat [...]'')\footnote{``carne'' is the Italian for
+``meat'' and ``americana'' is the adjective for ``American'', inflected for
+feminine singular (to agree grammatically with ``carne'') - note that in
+Italian the attributive adjective normally (though not necessarily)
+follows the noun to which it refers, whereas in English the opposite
+sequence is normally used.}:
+
+{\footnotesize
+\begin{verbcode}
+<text>[...]
+ <wf wid="w62_4" sent="62" para="1">la</wf>
+ <wf wid="w62_5" sent="62" para="1">carne</wf>
+ <wf wid="w62_6" sent="62" para="1">americana</wf>
+[...]</text>
+<terms>[...]
+ <term tid="t62_5" type="open" lemma="carne" pos="NOM">
+  <span><target id="w62_5"/></span>
+ </term>
+ <term tid="t62_6" type="open" lemma="americano" pos="ADJ">
+  <span><target id="w62_6"/></span>
+ </term>
+[...]</terms>
+\end{verbcode}
+}
+
+
+{\footnotesize
+\begin{verbcode}
+<text>[...]
+ <wf wid="w62_3" sent="62" para="1">American</wf>
+ <wf wid="w62_4" sent="62" para="1">meat</wf>
+[...]</text>
+<terms>[...]
+ <term tid="t62_3" type="open" lemma="American" pos="JJ">
+  <span><target id="w62_3"/></span>
+ </term>
+ <term tid="t62_4" type="open" lemma="meat" pos="NN">
+  <span><target id="w62_4"/></span>
+ </term>
+[...]</terms>
+\end{verbcode}
+}
+
+ 
+
+The test set needs to be aligned at word level so that target equivalents of the source-language checkpoints can be identified.
+This is done by appending the test set to a bigger parallel corpus, i.e. Europarl,\footnote{\url{http://www.statmt.org/europarl/}} because the quality of the alignment depends on the amount of text that is to be aligned.
+The text is preprocessed with the Europarl tokeniser; then GIZA++ is applied, and finally we get the word alignments of the sentences that make up the test set.
+
+Download the Europarl corpus for Italian--English:
+
+{\footnotesize
+\begin{verbcode}
+wget http://www.statmt.org/europarl/v6/it-en.tgz
+tar xzvf it-en.tgz
+\end{verbcode}
+}
+
+Prepare the word alignment input data by joining Europarl and the test set:
+
+{\footnotesize
+\begin{verbcode}
+cat europarl-v6.it-en.en D51_1.1/data/en_it/en-it.en.test > giza_input.en
+cat europarl-v6.it-en.it D51_1.1/data/en_it/en-it.it.test > giza_input.it
+\end{verbcode}
+}
+
+Perform word alignment (the script \verb+gizapp.sh+ provided with DELiC4MT wraps the different phases of GIZA++)
+
+{\footnotesize
+\begin{verbcode}
+delic4mt_*/scripts/gizapp.sh -sl it -tl en -sc giza_input.it -tc giza_input.en \
+> alignment.it-en 2> alignment.it-en.log
+\end{verbcode}
+}
+
+Get the last $n$ sentences of the alignment, those that correspond to the test set (1000 in our case):
+
+{\footnotesize
+\begin{verbcode}
+tail -n 1000 alignment.it-en > alignment.clean.it-en
+\end{verbcode}
+}
+
+% check alignment lines correspond to test files
+%\begin{verbcode}
+%paste tag_wordsline.clean.* alignment.clean.it-en | less
+%\end{verbcode}
+
+
+
+%Finally, these alignments are converted to the Travelling Object format.
+Next the word alignments %in Travelling Object format
+for the sentence pair presented earlier are shown:\footnote{Note that identifiers in the alignment start from 0 while in the KAF files do from 1.}
+
+
+%0-0 0-1 1-2 3-4 2-5 4-6 5-7 6-8 7-8 8-9 8-10 9-10 10-11 11-12 12-13 13-14 14-15 15-16 17-17 18-18 19-19 20-20 21-21 22-21 23-22 25-23 24-24 26-25 27-26 28-27 29-28 31-29 30-30 32-31 34-32
+%Le proteste per la carne americana, il progetto del <U+0093>Grande canale<U+0094> e la mancanza di dialogo con l<U+0092>opposizione fanno perdere punti al nuovo leader coreano, che ottiene solo 17 voti favorevoli su 100.
+%Protests over American meat, the project for the "great canal", and the lack of dialogue with the opposition are losing points for the new Korean leader, who gets only 17 favourable votes out of 100.
+
+{\footnotesize
+\begin{verbcode}
+... 5-2            4-3    ... [word alignments]
+carne-meat americana-American [tokens]
+\end{verbcode}
+}
+
+%{\footnotesize
+%\begin{verbcode}
+%<linkGrp domains=”s62 s62” targType=”t”>
+% [...]
+% <link><align xlink:href="#t4"/><align xlink:href="#t3"/></link>
+% <link><align xlink:href="#t5"/><align xlink:href="#t2"/></link>
+% [...]
+%</linkGrp>
+%\end{verbcode}
+%}
+
+
+\section{Creating a linguistic checkpoint}\label{sec:create_checkp}
+
+
+Kybots are used to extract the linguistic phenomena that are to be evaluated.
+A Kybot profile specifies which information to extract from the KAF documents.
+For example the profile that follows extracts under the element ``event'' the term identifiers of those nouns that are immediately followed by an adjective in the Italian side of the test set.
+Equivalent tokens in the target corpus of those found by the Kybots in the source are obtained using the word alignments.
+
+
+{\footnotesize
+\begin{verbcode}
+<Kybot id="kybot_n_a_it">
+  <variables>
+    <var name="X" type="term" pos="NOM*" />
+    <var name="Y" type="term" pos="ADJ*" />
+  </variables>
+  <relations>
+    <root span="X" />
+    <rel span="Y" pivot="X" direction="following" immediate="true" />
+  </relations>
+  <events>
+    <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+    <role rid="" event="" target="$Y/@tid" lemma="$Y/@lemma"
+      pos="$Y/@pos" rtype="follows"/>
+  </events>
+</Kybot>
+\end{verbcode}
+}
+
+The following commands load the Italian test file in KAF and the Kybot profile:
+
+{\footnotesize
+\begin{verbcode}
+perl ./mining_module/doc_load.pl --container-name docs_it en-it.it.test.kaf
+perl ./mining_module/kybot_load.pl --container-name kybots_it kybot_n_a_it.xml
+\end{verbcode}
+}
+
+Then the Kybot profile can be applied on the KAF document, and the matching terms are output:
+
+{\footnotesize
+\begin{verbcode}
+perl ./mining_module/kybot_run.pl --dry-run --profile-from-db --container-name docs_it \
+--kybot-container-name kybots_it kybot_n_a_it.xml > out_n_a_it.xml
+\end{verbcode}
+}
+
+The following sample of the output shows the term ``carne americana'', terms 5 and 6 extracted from sentence 62, as it is a noun adjective sequence:
+
+{\footnotesize
+\begin{verbcode}
+<kybotOut>
+  <doc shortname="en-it.it.test.kaf">
+   [...]
+   <event eid="e66" target="t62_5" lemma="carne" pos="NOM" synset="" rank=""
+    profile_id="kybot_n_a_it"/>
+   <role rid="r66" event="e66" target="t62_6" lemma="americano" pos="ADJ"
+    rtype="follows" synset="" rank="" profile_id="kybot_n_a_it"/>
+   [...]
+  </doc>
+</kybotOut>
+\end{verbcode}
+}
+
+
+It is optional but recommended to filter out checkpoints for which the source and target tokens do not share the equivalent PoS tags. This reduces the amount of instances removing noisy ones.
+
+{\footnotesize
+\begin{verbcode}
+perl delic4mt_*/scripts/filter_checkpoints.pl -kybot_out out_n_a_it.xml \
+-alignment alignment.clean.it-en -kaf_tl en-it.en.test.kaf \
+-constraints "NOM=NN;ADJ=JJ" > out_n_a_it.filtered.xml
+\end{verbcode}
+}
+
+This reads the checkpoint instances from the kybot\_out file, and for each of them uses the alignment to get the corresponding terms in the kaf\_tl file, and checks whether the PoS tags correspond checking the constraints. Constraints are separated by ;. In the example it will check that any noun in Italian (NOM*) corresponds to a noun in English (NN*) and the same for adjectives (ADJ* = JJ*).
+
+\section{Evaluating MT output for a checkpoint}\label{sec:eval_checkp}
+
+The last step is to evaluate an MT system on the translation of noun adjective sequences from Italian into English.
+The tool that performs the evaluation is \verb+delic4mt.jar+.
+It receives as input the word alignments, the source and target KAF files, the output of the Kybot and the output of the MT system.
+We will evaluate two MT systems:
+
+{\footnotesize
+\begin{verbcode}
+java -jar delic4mt_*/evaluate/delic4mt.jar -alg alignment.clean.it-en -sl_kaf \
+en-it.it.test.kaf -tl_kaf en-it.en.test.kaf -lc kybots/out_n_a_it.xml \
+-run delic4mt_*/test/enit/mt1.out > mt1_n_a_it
+
+java -jar delic4mt_*/evaluate/delic4mt.jar -alg alignment.clean.it-en -sl_kaf \
+en-it.it.test.kaf -tl_kaf en-it.en.test.kaf -lc kybots/out_n_a_it.xml \
+-run delic4mt_*/test/enit/mt2.out > mt2_n_a_it
+\end{verbcode}
+}
+
+The output files provide detailed information about the evaluation of each instance of the checkpoint. The last line provides the final score given to the MT system:
+
+{\footnotesize
+\begin{verbcode}
+tail -n 1 mt*n_a_it
+\end{verbcode}
+}
+
+Finally, we can calculate whether the difference between the scores is statistically significant:
+
+{\footnotesize
+\begin{verbcode}
+perl delic4mt_*/scripts/lingcheckp_sig.pl mt1* mt2* > stat_mt1_mt2_n_a_it 2>&1
+\end{verbcode}
+}
+
+
+\section{DELiC4MT in one call}
+
+An alternative to running each of tools shown in Sections \ref{sec:create_checkp} and \ref{sec:eval_checkp}, is to use \verb+delic4mt.sh+, a script that wraps the call to all of them.
+This can be very useful to automate the evaluation of different systems over various checkpoints.
+The user needs to provide a file with several variables (see \verb+/test/delic4mt_vars*+ for examples), namely: the checkpoints and systems to evaluate, test files and directories for each of the tools.
+Once the variables are in place the user can evaluate several systems executing:
+
+{\footnotesize
+\begin{verbcode}
+perl delic4mt_*/scripts/delic4mt.sh delic4mt_*/test/delic4mt_vars.sh
+\end{verbcode}
+}
+
+
+\bibliographystyle{plain}
+\bibliography{delic4mt_tutorial}
+\end{document}
+
+
