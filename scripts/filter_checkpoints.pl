@@ -30,6 +30,7 @@
 #
 # ---------
 # CHANGELOG
+# 20120515 check_constraints: exit loop when constraint fails
 # 20111213 created
 
 
@@ -120,6 +121,7 @@ sub get_tid_from_wid_sid{
 }
 
 # checks constraints on pos. Returns 0 (false) if pos_sl == constr_sl && pos_tl != constr_tl
+# 20120515 exit loop when constraint fails
 sub check_constraints{
 	my $pos_sl = shift;
 	my $pos_tl = shift;
@@ -135,6 +137,7 @@ sub check_constraints{
 #			print STDERR "filter_checkpoints::check_constraints $pos_sl = $c_sl, $pos_tl != $c_tl\n";
 			print STDERR "\t\tFailed\n";
 			$ret = 0;
+			last;
 		}
 	}
 
