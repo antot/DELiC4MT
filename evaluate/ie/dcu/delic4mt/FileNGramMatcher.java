@@ -316,7 +316,7 @@ public class FileNGramMatcher {
 							System.out.print( a_r.word_alignment.get(j) + ", ");
 							if( target_equivalent_ids.indexOf( a_r.target_token_id.get(j) ) < 0){
 								target_equivalent_ids.add( ((Integer) (a_r.target_token_id.get(j))).intValue() );
-								break;
+//								break;
 							}
 						}
 					}
@@ -367,7 +367,7 @@ public class FileNGramMatcher {
 						System.out.print(" ");
 						fw.write(" ");
 					}
-					token_id_int = ((Integer)token_id.get(i)).intValue();
+//					token_id_int = ((Integer)token_id.get(i)).intValue();
 					
 					k_trgt_sen = kr_trgt.getSentence(sen_id-1);
 					current_token_id = ((Integer) (target_equivalent_ids.get(i))).intValue();
