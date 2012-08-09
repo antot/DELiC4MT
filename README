@@ -5,7 +5,7 @@
 |                                                                            |
 \----------------------------------------------------------------------------/
 
-VERSION 20120223
+VERSION 20120809
 
 
 DELiC4MT is a piece of software that allows to perform diagnostic evaluation of Machine Translation systems over linguistic checkpoints, i.e. source-language lexical elements and grammatical constructions specified by the user. For more details see our paper in the Credits section.
@@ -14,6 +14,7 @@ DELiC4MT is a piece of software that allows to perform diagnostic evaluation of 
 
 CHANGELOG
 ---------
+20120809 bugfix in FileNGramMatcher.java
 20120223 Penalty based on brevity added to Java program
 20120207 Improved treetagger_preserving_tokens_and_lines.pl
 20121215 Added tutorial
