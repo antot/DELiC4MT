@@ -2,7 +2,7 @@
 
 # script that automates the different steps of DELiC4MT
 #
-# Copyright (c) 2010-11,
+# Copyright (c) 2011-12,
 # Antonio Toral, Dublin City University
 # atoral@computing.dcu.ie
 #
@@ -29,11 +29,10 @@
 #
 # ---------
 # CHANGELOG
+# 20120515 add support for filtering checkpoints
 # 20111215 some improvements
 # 20110822 created
 # ---------
-# TODO
-# add option to use filter_checkpoints.pl
 #
 
 set -e #if any command fails -> exit
@@ -53,8 +52,6 @@ a_higher_than_b() {
 
 	SCOREA=`tail -n 1 $SYSTEMA | awk '{print $NF}'`
 	SCOREB=`tail -n 1 $SYSTEMB | awk '{print $NF}'`
-
-#	echo "      delic4mt::a_higher_than_b scorea $SCOREA, scoreb $SCOREB" 1>&2
 
 	result=`expr $SCOREA \> $SCOREB`
 	if [ "$result" -eq "1" ]; then
@@ -91,11 +88,16 @@ for CHECKP in ${CHECKPS[@]} ; do
 	./kybot_run.pl --dry-run --profile-from-db --container-name script_docs-$LP-$SL --kybot-container-name script_kybots-$SL kybot_$CHECKP.xml > $WORK_DIR/out_$CHECKP.xml
 
 
+	if [ -n "$CONSTRAINTS" ]; then
+		echo "  delic4mt::main filtering checkpoint" 1>&2
+		mv $WORK_DIR/out_$CHECKP.xml $WORK_DIR/out_$CHECKP.unfiltered.xml
+		perl $DELIC4MT_DIR/scripts/filter_checkpoints.pl -kybot_out $WORK_DIR/out_$CHECKP.unfiltered.xml -alignment $TEST_ALG -kaf_tl $TEST_TL -constraints $CONSTRAINTS > $WORK_DIR/out_$CHECKP.xml 2> $WORK_DIR/out_$CHECKP.filter.log
+	fi
+
+
 	echo "  delic4mt::main evaluating MT systems" 1>&2
+	cd $WORK_DIR
 	for SYSTEM in ${SYSTEMS[@]} ; do
-		#cd $EVALUATE_DIR
-#		java src.FileNGramMatcher -sl $SL -tl $TL -t $WORK_DIR/out_$CHECKP.xml $SYSTEM > $WORK_DIR/$SYSTEM-$CHECKP.out
-		cd $WORK_DIR
 		java -jar $DELIC4MT_DIR/evaluate/delic4mt.jar -alg $TEST_ALG -sl_kaf $TEST_SL -tl_kaf $TEST_TL -lc $WORK_DIR/out_$CHECKP.xml -run $SYSTEMS_DIR/$SYSTEM > $WORK_DIR/$SYSTEM-$CHECKP.out
 
 	done
@@ -108,12 +110,6 @@ for CHECKP in ${CHECKPS[@]} ; do
 				echo "    delic4mt::main $SYSTEMA and $SYSTEMB"
 				if ( a_higher_than_b "$WORK_DIR/$SYSTEMA-$CHECKP.out" "$WORK_DIR/$SYSTEMB-$CHECKP.out" ) ; then
 					perl $DELIC4MT_DIR/scripts/lingcheckp_sig.pl $WORK_DIR/$SYSTEMA-$CHECKP.out $WORK_DIR/$SYSTEMB-$CHECKP.out >> $WORK_DIR/stat_sig-$LP 2>&1
-#					echo "    delic4mt::main systema $SYSTEMA > systemb $SYSTEMB -> doing statistical significance test" 1>&2
-#				else
-#					echo "    delic4mt::main systema $SYSTEMA < systemb $SYSTEMB -> not doing statistical significance test" 1>&2
-#					SYSTEMAUX=$SYSTEMA
-#					SYSTEMA=$SYSTEMB
-#					SYSTEMB=$SYSTEMAUX
 				fi
 
 			fi
@@ -124,6 +120,7 @@ done
 
 # cleanup
 rm -fr $KYBOT_DIR/dbxml/script_docs* $KYBOT_DIR/dbxml/script_kybots*
+rm -fr $WORK_DIR/data
 cd $ORIG_DIR
 
 exit 0
