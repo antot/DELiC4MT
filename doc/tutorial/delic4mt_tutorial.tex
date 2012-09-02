@@ -96,11 +96,14 @@ TODO PoS tagger, we use TreeTagger:
 
 {\footnotesize
 \begin{verbcode}
+mkdir treetagger && cd treetagger
 wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tree-tagger-linux-3.2.tar.gz
-wget sh install-tagger.sh 
-wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/english-par-linux-3.1.bin.gz
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tagger-scripts.tar.gz
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/install-tagger.sh
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/english-par-linux-3.2.bin.gz
 wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/italian-par-linux-3.1.bin.gz
-mkdir treetagger && tar xzvf tree-tagger*gz
+sh install-tagger.sh
+cd ..
 \end{verbcode}
 }
 
