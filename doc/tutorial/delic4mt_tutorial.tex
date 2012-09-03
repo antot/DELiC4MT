@@ -89,10 +89,11 @@ Compile GIZA++:
 \begin{verbcode}
 cd giza-pp/
 make
+cd ..
 \end{verbcode}
 }
 
-TODO PoS tagger, we use TreeTagger:
+We use TreeTagger for PoS tagging:
 
 {\footnotesize
 \begin{verbcode}
@@ -101,9 +102,23 @@ wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tree-tagger-linux-3.2.tar.gz
 wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tagger-scripts.tar.gz
 wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/install-tagger.sh
 wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/english-par-linux-3.2.bin.gz
-wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/italian-par-linux-3.1.bin.gz
+wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/italian-par-linux-3.2-utf8.bin.gz
 sh install-tagger.sh
 cd ..
+\end{verbcode}
+}
+%wget ftp://ftp.ims.uni-stuttgart.de/pub/corpora/italian-par-linux-3.1.bin.gz
+
+TreeTagger not only PoS tags the text but also tokenizes it. We do not want
+that since our text is already tokenised and retokenisation would break the
+correspondence of tokens with the word alignment.
+
+{\footnotesize  
+\begin{verbcode}
+cd treetagger/cmd
+sed s/^\$TOK/#\$TOK/ tree-tagger-italian-utf8 > tree-tagger-notok-italian-utf8
+sed s/^\$TOK/#\$TOK/ tree-tagger-english > tree-tagger-notok-english
+cd ../..
 \end{verbcode}
 }
 
@@ -114,6 +129,18 @@ The Kybot engine:
 svn co https://kyoto.let.vu.nl/svn/kyoto/trunk/modules/mining_module/
 \end{verbcode}
 }
+
+It depends on dbxml (see the kybot's README for details). It has been tested
+with dbxml 2.4.16, download and install:
+
+{\footnotesize
+\begin{verbcode}
+wget http://download.oracle.com/berkeley-db/dbxml-2.5.16.tar.gz
+tar -xvzf dbxml-*.tar.gz
+cd dbxml-*
+sudo ./buildall.sh --prefix=/usr/local --enable-perl
+cd ..
+\end{verbcode}
 
 and finally preprocessing tools from Europarl:
 
