@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- adv in DE, tags ADV, PAV -->
+
+<Kybot id="kybot_r_de">
+  <variables>
+    <var name="X" type="term" pos="ADV | PAV" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

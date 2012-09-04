@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- prepositions in NL, tags prep* -->
+
+<Kybot id="kybot_prep_nl">
+  <variables>
+    <var name="X" type="term" pos="prep*" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

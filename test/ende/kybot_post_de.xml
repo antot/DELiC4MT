@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- postpositions in DE, tags APPO | APZR -->
+
+<Kybot id="kybot_post_de">
+  <variables>
+    <var name="X" type="term" pos="APPO | APZR" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

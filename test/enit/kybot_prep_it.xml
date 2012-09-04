@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Kybot id="kybot_prep_it">
+  <variables>
+    <var name="X" type="term" pos="PRE*" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- prepositions and postpositions in DE, tags AP* -->
+
+<Kybot id="kybot_prep_post_de">
+  <variables>
+    <var name="X" type="term" pos="AP*" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Kybot id="kybot_v_v_v_it">
+  <variables>
+    <var name="X" type="term" pos="VER*" />
+    <var name="Y" type="term" pos="VER*" />
+    <var name="Z" type="term" pos="VER*" />
+  </variables>
+
+<relations>
+  <root span="X" />
+  <rel span="Y" pivot="X" direction="following" immediate="true" />
+  <rel span="Z" pivot="Y" direction="following" immediate="true" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+  <role rid="" event="" target="$Y/@tid" lemma="$Y/@lemma" pos="$Y/@pos" rtype="follows"/>
+  <role rid="" event="" target="$Z/@tid" lemma="$Z/@lemma" pos="$Z/@pos" rtype="follows"/>
+</events>
+
+</Kybot>
+

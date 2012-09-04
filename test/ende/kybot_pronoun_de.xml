@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- pronouns in DE -->
+
+<Kybot id="kybot_pronoun_de">
+  <variables>
+    <var name="X" type="term" pos="PD* | PI* | PP* | PR* | PW*" />
+  </variables>
+
+<relations>
+  <root span="X" />
+</relations>
+
+<events>
+  <event eid="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos"/>
+</events>
+
+</Kybot>
+

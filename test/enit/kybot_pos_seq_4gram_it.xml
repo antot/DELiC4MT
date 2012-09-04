@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+CHANGELOG
+20110516 created
+-->
+
+<!-- 3 most frequent PoS sequences (4-grams) in Repubblica and itWac corpora
+
+3154784	ART	NOUN	ARTPRE	NOUN
+2107434	ART	NOUN	PRE	NOUN
+2024993	ARTPRE	NOUN	ARTPRE	NOUN
+
+14475218	ART	NOUN	ARTPRE	NOUN
+12978571	ARTPRE	NOUN	ARTPRE	NOUN
+11039395	ART	NOUN	PRE	NOUN
+
+
+tagset has to be converted from
+http://sslmit.unibo.it/~baroni/collocazioni/itwac.tagset.txt
+to
+http://www.ims.uni-stuttgart.de/ftp/pub/corpora/italian-tagset.txt
+
+i.e.:
+NOUN -> NOM
+ART -> det
+ARTPRE -> PRE:det
+PRE -> PRE
+-->
+
+<Kybot id="kybot_pos_seq_4gram_it">
+  <variables>
+    <var name="W" type="term" pos="DET | PRE:det" />
+    <var name="X" type="term" pos="NOM" />
+    <var name="Y" type="term" pos="PRE | PRE:det" />
+    <var name="Z" type="term" pos="NOM" />
+  </variables>
+
+<relations>
+  <root span="W" />
+  <rel span="X" pivot="W" direction="following" immediate="true" />
+  <rel span="Y" pivot="X" direction="following" immediate="true" />
+  <rel span="Z" pivot="Y" direction="following" immediate="true" />
+</relations>
+
+<events>
+  <event eid="" target="$W/@tid" lemma="$W/@lemma" pos="$W/@pos"/>
+  <role rid="" event="" target="$X/@tid" lemma="$X/@lemma" pos="$X/@pos" rtype="follows"/>
+  <role rid="" event="" target="$Y/@tid" lemma="$Y/@lemma" pos="$Y/@pos" rtype="follows"/>
+  <role rid="" event="" target="$Z/@tid" lemma="$Z/@lemma" pos="$Z/@pos" rtype="follows"/>
+</events>
+
+</Kybot>
+
