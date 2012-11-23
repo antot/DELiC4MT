@@ -32,6 +32,7 @@
 #
 # CHANGELOG
 # ---------
+# 20121123 add support for bulgarian (now supports EN, DE, NL, BG)
 # 20111114 escape character \ (treetagger drops it)
 # 20110215 eos_tag depends on input language
 # 20110210 created
@@ -92,6 +93,9 @@ print STDERR "::main postagger command = $command\n";
 $eos_tag = "SENT";
 if($lang eq "dutch" || $lang eq "german"){
 	$eos_tag = "\$\.";
+}
+if($lang eq "bulgarian"){
+	$eos_tag = "PT_SENT";
 }
 
 while (defined($line = <STDIN>)) {

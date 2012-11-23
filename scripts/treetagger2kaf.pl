@@ -30,6 +30,7 @@
 #
 # ---------
 # CHANGELOG
+# 20121123 add support for bulgarian (now supports EN, DE, NL, BG)
 # 20110215 preserve eos terms
 # 20110215 add $. as a possible eos tag
 # 20110210 created
@@ -118,7 +119,7 @@ while (defined($line = <STDIN>)) {
 
 	$c_tok++;
 
-	if($f_pos eq "SENT" || $f_pos eq "\$\."){
+	if($f_pos eq "SENT" || $f_pos eq "\$\." || $f_pos eq "PT_SENT"){
 		$c_sent++;
 		if($opt_rids){ $c_tok = 1; }
 		next;
