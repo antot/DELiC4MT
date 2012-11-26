@@ -110,9 +110,10 @@ while (defined($line = <STDIN>)) {
 
 
 	my $analysis = analyse($tagger_input, $command);
-#	$analysis =~ s/\t$eos_tag\t/\tOTHER\t/g; # overwrite any EOS tag
+#	$analysis =~ s/\t$eos_tag\t/\tOTHER\t/g; # overwrite any EOS tag #TODO should be done with variable but does not work, check why!
 	$analysis =~ s/\tSENT\t/\tOTHER\t/g; # overwrite any EOS tag
 	$analysis =~ s/\t\$\.\t/\tOTHER\t/g; # overwrite any EOS tag
+	$analysis =~ s/\tPT_SENT\t/\tOTHER\t/g; # overwrite any EOS tag
 	
 	my @lines = split(/\n/, $analysis);
 #	$lines[$#lines] =~ s/\t[^\t]*\t/\tSENT\t/; # change last tag to EOS
