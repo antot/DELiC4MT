@@ -208,7 +208,7 @@ public class FileNGramMatcher {
 			boolean b_valid = true;
 			int ind = 0;
 			
-			System.out.println("Number of arguements: " + args.length);
+			System.out.println("Number of arguments: " + args.length);
 			
 			String chkpt_ref_filename = "data" + System.getProperty("file.separator") + "linguistic_checkpoint_ref.txt";
 			System.out.println("chkpt_ref_filename: " + chkpt_ref_filename);
