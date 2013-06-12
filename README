@@ -5,7 +5,7 @@
 |                                                                            |
 \----------------------------------------------------------------------------/
 
-VERSION 20120809
+VERSION 20130612
 
 
 DELiC4MT is a piece of software that allows to perform diagnostic evaluation of Machine Translation systems over linguistic checkpoints, i.e. source-language lexical elements and grammatical constructions specified by the user. For more details see our paper in the Credits section.
@@ -14,6 +14,7 @@ DELiC4MT is a piece of software that allows to perform diagnostic evaluation of 
 
 CHANGELOG
 ---------
+20130612 html output added to Java program (for web application)
 20120809 bugfix in FileNGramMatcher.java
 20120223 Penalty based on brevity added to Java program
 20120207 Improved treetagger_preserving_tokens_and_lines.pl
@@ -27,7 +28,7 @@ CHANGELOG
 CONTENTS
 --------
 
-doc/		Documentation, including a tutorial and a paper
+doc/		Documentation, including a tutorial and related papers
 evaluate/	Java program that carries out the evaluation on linguistic checkpoints
 scripts/	Support scripts
 test/		Sample test data
@@ -37,24 +38,24 @@ test/		Sample test data
 CREDITS
 -------
 
-Code by Sudip Naskar and Antonio Toral
+Code by Sudip Kumar Naskar and Antonio Toral
 Logo by Pawel Plesniak
 
 
 If you use DELiC4MT in your research please cite the following paper:
 
-Sudip Kumar Naskar, Antonio Toral, Federico Gaspari and Andy Way. A Framework for Diagnostic Evaluation of MT based on Linguistic Checkpoints. In Proceedings of the 13th Machine Translation Summit. Xiamen (China). pp. 529-536. September 2011.
+Antonio Toral, Sudip Kumar Naskar, Federico Gaspari, Declan Groves. DELiC4MT: A Tool for Diagnostic MT Evaluation over User-defined Linguistic Phenomena. The Prague Bulletin of Mathematical Linguistics No 98, 2012, pp. 121-131., ISSN 0032-6585, DOI: 10.2478/v10108-012-0014-9.
 
-@InProceedings{mtsummit11_delic4mt,
-  author =       {Sudip Kumar Naskar and Antonio Toral and Federico Gaspari and Andy Way},
-  title =        {A Framework for Diagnostic Evaluation of MT based on Linguistic Checkpoints},
-  booktitle =    {Proceedings of the 13th Machine Translation Summit},
-  pages =        {529--536},
-  year =         2011,
-  address =      {Xiamen, China},
-  month =        {September}
+@Article{pbml-2012-delic4mt,
+  author    = {Antonio Toral and Sudip Kumar Naskar and Federico Gaspari and Declan Groves},
+  title     = {{DELiC4MT: A Tool for Diagnostic MT Evaluation over User-defined Linguistic Phenomena}},
+  journal   = {The Prague Bulletin of Mathematical Linguistics},
+  issue     = {98},
+  publisher = {Springer Berlin/Heidelberg},
+  issn      = {0032-6585},
+  pages     = {121-132},
+  year      = {2012}
 }
-
 
 
 CONTACT
