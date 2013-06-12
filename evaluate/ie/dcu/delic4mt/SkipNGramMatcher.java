@@ -22,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
  *****************************************************************************/
 
+/*
+CHANGELOG
+20130605 adapting output for web application
+*/
 
 package ie.dcu.delic4mt;
 import java.util.regex.*;
@@ -80,13 +84,16 @@ class SkipNgramMatcher
 		for (int i = 0; i < maxGrams; i++)
 			total_n_gram_match += ((Integer) n_gram_match.get(i)).intValue();
 		
-		System.out.println("All n_gram matches : ");
-		for (int i = 0; i < total_n_gram_match; i++)
-			System.out.println(ngramMatchList.elementAt(i));
+		System.out.print("ngram matches\t");
+		for (int i = 0; i < total_n_gram_match; i++){
+			System.out.print(ngramMatchList.elementAt(i));
+			if (i+1 < total_n_gram_match) System.out.print(", ");
+		}
 			
 		System.out.println("");
-		System.out.println("Total n_gram matches: " + total_n_gram_match);
-		System.out.println("Total n_gram count in reference: " + total_n_gram_count);
+//		System.out.println("Total n_gram matches: " + total_n_gram_match);
+//		System.out.println("Total n_gram count in reference: " + total_n_gram_count);
+		//System.out.println("Checkpoint ngrams\t" + total_n_gram_match + "/" + total_n_gram_count);
 	}
 	
 	void computeSkipMatches(int n)
@@ -123,14 +130,14 @@ class SkipNgramMatcher
 				if(b_valid == true)
 				{
 					ngramListA.add(new String(ngram.toString()));
-					System.out.println("Got new " + n + "-gram: " + ngramListA.elementAt(total_n_gram_count + count));
+//					System.out.println("Got new " + n + "-gram: " + ngramListA.elementAt(total_n_gram_count + count));
 					count++;
 				}
 			}
 		}
 		
 		n_gram_count.add(new Integer(count));
-		System.out.println("Number of " + n + "-grams in reference: " + n_gram_count.get(n-1));
+//		System.out.println("Number of " + n + "-grams in reference: " + n_gram_count.get(n-1));
 		
 		count = 0;
 		size = ngramListA.size();
@@ -152,7 +159,7 @@ class SkipNgramMatcher
 				{
 					if( ngramMatchList.indexOf( ngramListA.elementAt(k) ) < 0){
 						ngramMatchList.add(new String((ngramListA.elementAt(k)).toString()));
-						System.out.println("Matched " + n + "-gram: " + ngramListA.elementAt(k).toString());
+//						System.out.println("Matched " + n + "-gram: " + ngramListA.elementAt(k).toString());
 						count++;
 						break;
 					}
@@ -160,7 +167,7 @@ class SkipNgramMatcher
 			}
 		}
 		n_gram_match.add(new Integer(count));
-		System.out.println("# of matching " + n + "-grams = " + n_gram_match.get(n-1));
+//		System.out.println("# of matching " + n + "-grams = " + n_gram_match.get(n-1));
 	}
 }
 
