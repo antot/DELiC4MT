@@ -32,6 +32,7 @@
 #
 # CHANGELOG
 # ---------
+# 20160526 use only UTF-8 tree-tagger commands
 # 20121123 add support for bulgarian (now supports EN, DE, NL, BG)
 # 20111114 escape character \ (treetagger drops it)
 # 20110215 eos_tag depends on input language
@@ -47,15 +48,18 @@ sub analyse{
 	my $text_safe = escape_str($_[0]);
 	my $analysis = "";
 
-	#print "$text_safe\n";
-	if($_[1] =~ m/utf8/){
-		print STDERR "::analyse postagging without encoding conversion\n";
-		$analysis = `echo "$text_safe" | $_[1]`;
-	} else {
-		print STDERR "::analyse postagging with encoding conversion\n";
-		#$analysis = `echo "$text_safe" | iconv -f utf-8 -t iso-8859-1//IGNORE -c | $_[1] | iconv -f iso-8859-1 -t utf-8`;
-		$analysis = `echo "$text_safe" | iconv -f utf-8 -t iso-8859-1//TRANSLIT | $_[1] | iconv -f iso-8859-1 -t utf-8//TRANSLIT`;
-	}
+#	print STDERR "::analyse without encoding conversion\n";
+	$analysis = `echo "$text_safe" | $_[1]`;
+
+#	#print "$text_safe\n";
+#	if($_[1] =~ m/utf8/){
+#		print STDERR "::analyse postagging without encoding conversion\n";
+#		$analysis = `echo "$text_safe" | $_[1]`;
+#	} else {
+#		print STDERR "::analyse postagging with encoding conversion\n";
+#		#$analysis = `echo "$text_safe" | iconv -f utf-8 -t iso-8859-1//IGNORE -c | $_[1] | iconv -f iso-8859-1 -t utf-8`;
+#		$analysis = `echo "$text_safe" | iconv -f utf-8 -t iso-8859-1//TRANSLIT | $_[1] | iconv -f iso-8859-1 -t utf-8//TRANSLIT`;
+#	}
 	#print STDERR "::analyse analysis <$analysis>\n";
 	return $analysis;
 }
@@ -75,16 +79,25 @@ my $lang = $ARGV[0];
 
 
 #check command exists
-my $command = "tree-tagger-notok-$lang-utf8";
-my $test_command=`which $command`;
+#my $command = "tree-tagger-notok-$lang-utf8";
+#my $test_command=`which $command`;
+#if (length($test_command) == 0) {
+#	$command = "tree-tagger-notok-$lang";
+#	$test_command=`which $command`;
+#	if (length($test_command) == 0) {
+#		print STDERR "::main cannot find a suitable postagger command\n";
+#		exit -1;
+#	}
+#}
+
+$command = "tree-tagger-notok-$lang";
+$test_command=`which $command`;
 if (length($test_command) == 0) {
-	$command = "tree-tagger-notok-$lang";
-	$test_command=`which $command`;
-	if (length($test_command) == 0) {
-		print STDERR "::main cannot find a suitable postagger command\n";
-		exit -1;
-	}
+	print STDERR "::main cannot find a suitable postagger command\n";
+	exit -1;
 }
+
+
 print STDERR "::main postagger command = $command\n";
 #exit;
 
