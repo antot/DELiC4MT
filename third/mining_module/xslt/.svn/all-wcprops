@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/kyoto/!svn/ver/1062/trunk/modules/mining_module/xslt
+END
+Kaf2_to_Kaf.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/kyoto/!svn/ver/1062/trunk/modules/mining_module/xslt/Kaf2_to_Kaf.xsl
+END
+Kaf_to_Kaf2.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/kyoto/!svn/ver/1062/trunk/modules/mining_module/xslt/Kaf_to_Kaf2.xsl
+END
+saxon9.jar
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/kyoto/!svn/ver/1062/trunk/modules/mining_module/xslt/saxon9.jar
+END

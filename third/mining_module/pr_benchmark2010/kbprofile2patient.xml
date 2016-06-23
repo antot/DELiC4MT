@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Esaldia 1:
+
+Total river flow to the Bay during the 2008 water year (October 2007-September 2008) was 37.5 billion gallons per day
+
+Atera:
+
+event: flow
+
+role: patient
+filler: river
+
+Arazoak:
+
+- "that" has been tagged with pos "N"
+
+ -->
+
+<Kybot id="benchmark_03">
+ <variables>
+   <var name="A" type="term" pos="N"/>
+   <var name="B" type="term" lemma="flow" pos="N"/>
+ </variables>
+
+ <relations>
+   <root span="B"/>
+   <rel span="A" pivot="B" direction="preceding" immediate="true" />
+ </relations>
+
+<events>
+  <event eid="" target="$B/@tid" lemma="$B/@lemma" pos="$B/@pos"/>
+  <role rid="" event="" target="$A/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

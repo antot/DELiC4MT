@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Esaldia 4:
+
+The defences are surveyed regularly to check their condition.
+
+Atera:
+
+event: survey
+
+role: other (goal)
+filler: check condition
+
+
+ -->
+
+<Kybot id="benchmark_04b">
+ <variables>
+   <var name="B" type="term" lemma="be"/>
+   <var name="C" type="term" lemma="surveyed"/>
+   <var name="D" type="term" pos="A"/>
+   <var name="E" type="term" lemma="to"/>
+
+   <!-- Hemen beharko luke VP bat "check condition" -->
+   <var name="F" type="term" pos="V"/>
+ </variables>
+
+<!-- 
+
+  Nota: kasu honetan pibote nagusia C da "surveyed", eta B C-ren aurretik
+  doala esaten da.  Arrazoia horrela egiteko eraginkortasuna da. Askoz
+  azkarragoa da "C" guztiak eskuratu "B" guztiak baino ('be' lema duten hitz
+  guztiak!)
+
+-->
+
+ <relations>
+   <root span="C"/>
+   <rel span="B" pivot="C" direction="preceding" immediate="true" />
+   <rel span="D" pivot="C" direction="following" immediate="true" />
+   <rel span="E" pivot="D" direction="following" immediate="true" />
+   <rel span="F" pivot="E" direction="following" immediate="true" />
+ </relations>
+
+<events>
+  <event eid="" event="" target="$C/@tid" lemma="$C/@lemma" pos="$C/@pos"/>
+  <role rid="" event="" target="$F/@tid" rtype="other"/>
+</events>
+</Kybot>
+

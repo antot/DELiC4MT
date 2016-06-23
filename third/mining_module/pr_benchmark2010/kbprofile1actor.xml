@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Esaldia 3:
+
+The Bay watershed is home to almost 17 million people.
+
+Atera:
+
+event: home
+
+role: actor
+filler: people
+
+ -->
+
+<Kybot id="benchmark_03">
+ <variables>
+   <var name="A" type="term" lemma="home"/>
+   <var name="B" type="term" lemma="to"/>
+   <var name="C" type="term" pos="N"/>
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="following" immediate="true"/>
+   <rel span="C" pivot="B" direction="following" />
+ </relations>
+
+<events>
+  <event eid="" target="$A/@tid" lemma="$A/@lemma" pos="$A/@pos"/>
+  <role rid="" event="" target="$C/@tid" rtype="actor"/>
+</events>
+</Kybot>
+

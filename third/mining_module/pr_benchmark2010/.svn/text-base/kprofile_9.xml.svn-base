@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Sentence 9:
+The Chesapeake Bay ecosystem remains severely degraded
+
+Result:
+
+event: degradation
+
+role: patient
+filler: ecosystem
+
+ -->
+
+<Kybot id="benchmark_09">
+ <variables>
+   <var name="A" type="term" lemma="ecosystem"/>
+   <var name="B" type="term" pos="N"/>
+   <var name="C" type="term" pos="V"/>
+   <var name="D" type="term" pos="A"/>
+   <var name="E" type="term" pos="V"/>
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="preceding" immediate="true" />  <!-- "Chesapeake Bay" location -->
+   <rel span="C" pivot="A" direction="following" immediate="true" />
+   <rel span="D" pivot="C" direction="following" immediate="true" />  <!-- optional adverb? -->
+   <rel span="E" pivot="D" direction="following" immediate="true" />
+ </relations>
+
+<events>
+  <event eid="" target="$E/@tid" lemma="$E/@lemma" pos="$E/@pos"/>
+  <event target="$B/@tid" lemma="$B/@lemma" pos="$B/@pos"/>
+  <event target="$D/@tid" lemma="$D/@lemma" pos="$D/@pos"/>
+  <role rid="" event="" target="$A/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Sentence 29:
+
+Forests also absorb air pollution and retain up to 85 percent of the nitrogen from sources such as automobiles and power plants
+
+event: absorb
+
+role: patient
+filler: air pollution
+
+event: retain
+
+role: patient
+filler: nitrogen
+
+role: patient
+filler: sources such as automobiles and power plants
+
+ -->
+
+<Kybot id="benchmark_03">
+ <variables>
+   <var name="B" type="term" lemma="absorb"/>
+   <var name="A" type="term" pos="N"/> <!-- NP chunk head -->
+ </variables>
+
+ <relations>
+   <root span="B"/>
+   <rel span="A" pivot="B" direction="following" />
+ </relations>
+
+<events>
+  <event eid="" target="$B/@tid" lemma="$B/@lemma" pos="$B/@pos"/>
+  <role rid="" event="" target="$A/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

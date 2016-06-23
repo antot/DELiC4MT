@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Sentence 10:
+The Bay's health is measured by studying water quality, habitats, the lower food web and fish and selfish
+
+Result:
+
+event: measure
+
+role: patient
+filler: Bay's health
+role: actor
+filler: water quality, habitats, ...
+
+ -->
+
+<Kybot id="benchmark_10">
+ <variables>
+   <var name="D" type="term" pos="N"/>
+   <var name="B" type="term" lemma="be"/>
+   <var name="A" type="term" lemma="measured" pos="G"/>
+   <var name="C" type="term" lemma="by"/>
+   <var name="E" type="term" pos="V"/>
+   <var name="F" type="term" pos="N"/>
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="preceding" immediate="true" />  <!-- "be" -->
+   <rel span="D" pivot="B" direction="preceding" immediate="true" />  <!-- "Bay's health" -->
+   <rel span="C" pivot="A" direction="following" immediate="true" />  <!-- "by" -->
+   <rel span="E" pivot="C" direction="following" immediate="true" />  <!-- optional "studying"? -->
+   <rel span="F" pivot="E" direction="following" immediate="true" />
+ </relations>
+
+<events>
+  <event eid=""         target="$A/@tid" lemma="$A/@lemma" pos="$A/@pos"/>
+  <role rid="" event="" target="$F/@tid" rtype="actor"/>
+  <role rid="" event="" target="$D/@tid" rtype="patient"/>
+</events>
+</Kybot>

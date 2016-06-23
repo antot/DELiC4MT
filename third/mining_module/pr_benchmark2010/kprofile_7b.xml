@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Sentence 7:
+The actions that residents take every day affect nature and impact the health of local creeks, streams and rivers, and ultimately the Bay
+
+
+Result:
+
+event: affect
+
+role: actor
+filler: action
+
+Comments:
+      * problem with the relative clause ("that residents take every day"). I matched it word by word.
+      * adverbs are optional ("everyday")
+      * "affect" tagged incorrectly as N
+
+ -->
+
+<Kybot id="benchmark_07b">
+ <variables>
+   <var name="A" type="term" lemma="action"/>
+   <var name="B" type="term" lemma="that"/>
+   <var name="C" type="term" pos="N"/>
+   <var name="D" type="term" pos="V"/>
+   <var name="E" type="term" pos="G"/>      <!-- optional adverb? -->
+   <var name="F" type="term" pos="N"/>
+   <var name="G" type="term" pos="N"/>      <!-- it should be pos="V" -->
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="following" />
+   <rel span="C" pivot="B" direction="following" immediate="true" />
+   <rel span="D" pivot="C" direction="following" immediate="true" />
+   <rel span="E" pivot="D" direction="following" immediate="true" />
+   <rel span="F" pivot="E" direction="following" immediate="true" />
+   <rel span="G" pivot="F" direction="following" immediate="true" />
+  </relations>
+
+<events>
+  <event eid="" target="$F/@tid" lemma="$F/@lemma" pos="$F/@pos"/>
+  <role rid="" event="" target="$A/@tid" rtype="actor"/>
+  <role rid="" event="" target="$G/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

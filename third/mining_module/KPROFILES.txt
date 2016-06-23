@@ -1,0 +1,195 @@
+
+Kybots: Knowledge Yielding Robots
+
+Kybots are little scripts whose purpose is to search over KAF annotated
+documents for useful patterns and generate facts. For instance, a Kybot can
+be defined for searching patterns such as "X increased by Y%" or "X
+decreased over Y percent" etc, and generate an event and fills the role
+"quantity".
+
+Kybots are defined by means of a Kybot profile which declaratively describes
+which information the kybot will be searching for, and which output will it
+produce for matching documents.
+
+* Kybot profiles
+
+This section describes the syntax for defining Kybots.  The kybot profile
+has three main parts:
+
+- Declaration of variables
+- Declarations of the relations among variables
+- Output format
+
+In the first section, the entities the kybot will be searching for are
+defined. This includes, for example, "all terms whose lemmas are 'increase'
+or 'decrease"', "all terms whose part-of-speech is pronoun" etc.  The second
+section specifies the relations among the previously defined
+variables. Typical relations are "following", "preceding", "window" etc.  If
+the relations among these variables hold, a matching is produced. The third
+section describes the output to be produced.
+
+We will see the three parts in turn, taking this running example:
+
+  Search for terms with lemma 'increase' immediately followed by a pronoun
+  which in turn is followed by a term which finishes with a percent sign
+  '\%' or the string 'percent'.
+
+
+** Declaration of variables
+
+As said before, this section declares the relevant entities of the
+query. For example:
+
+<variables>
+  <var name="x" type="term" lemma="increase"/>
+  <var name="y" type="term" pos="P"/>
+  <var name="z" type="term" lemma="*% | *percent "/>
+</variables>
+
+defines three variables, with names x, y and z, respectively:
+
+  x: terms with lemma 'increase'
+  y: terms whose POS is pronoun (starts with 'p', according to KAF
+     definition)
+  z: terms finishing with a percent sign '%' or the string 'percent'
+
+Each <var> element defines a new variable, and has the following attributes:
+
+  - name: the name of the variable
+
+  - type: the type of the variable (term, dep, chunk, etc.)
+
+  - lemma: the lemma of the term. Multiple lemmas can be described separated
+  	   by the "|" character. Also, pattern-matching like rules can be
+  	   applied to express lemmas with start or end witch a specific
+  	   substring. For example, "*percent" match lemmas ending with the
+  	   substring "percent". Finally, negation can be specified using the
+  	   "!"  sign as the first character.  
+
+  - pos: the part of speech.
+
+  - reference: match terms assigned to a particular concept/sense in the ontology or WordNet.
+
+  - reftype: match terms assigned to a particular concept/sense in the
+    	     ontology or WordNet following the reftype.
+
+Following the example above, we can rewrite the rule for variable 'x' and
+include all terms linked to the ontological concept "Kyoto#increase_in_magnitude":
+
+<variables>
+  <var name="x" type="term" reference="Kyoto#increase_in_magnitude" reftype="sc_subClassOf"/>
+  <var name="y" type="term" pos="P"/>
+  <var name="z" type="term" lemma="*% | *percent "/>
+</variables>
+
+
+** Relations between variables
+
+This section specifies the relations among variables which must hold in
+order to produce new facts. For example,
+
+<relations>
+  <root span="x"/>
+  <rel span="y" pivot="x" direction="following"/>
+  <rel span="z" pivot="y" direction="following"/>
+</relations>
+
+says that variable x is the main pivot, that variable y must be following
+variable x at a distance of 1, and that variable z must be following
+variable y at a distance of 1.
+
+The valid elements within <relations> elements are:
+
+  - root: specify which variable is the main pivot
+
+  - rel: declare a relation between two variables
+
+The attributes of a <root> element are the following:
+
+  - span: name of the variable acting as main pivot
+
+The attributes of <rel> element are the following:
+
+  - span: the name of the variable
+
+  - pivot: the name of the pivot variable
+
+  - direction: in which direction variable must be respect to the
+    	       pivot. Currently there are two possible values: "following"
+    	       or "preceding".
+
+  - immediate: wether the variable is immediately following (or preceding)
+    	       the pivot. If it is not, search until a sentence boundary is
+    	       reached.
+
+  - opt: wether the relation is optional or not.
+
+
+*** Generic relations
+
+It is possible to define generic relations among the external
+references of variables by using a <predicate> element (one per
+profile).
+
+example:
+
+<predicate name="DOLCE-Lite.owl#participant-in" event="Y" filler="X"/>
+ 
+The <predicate> element finds the
+reftype="DOLCE-Lite.owl#participant-in" attribute among the
+external-refs of all possible Y terms, and "fills" their references
+with X terms. Those X terms will have the following attributes among
+their external-refs: [reftype="SubClassOf"] and
+[reference="Y.reference"]. That is, X and Y terms will share
+non-specified references.
+
+Consider the following kybot profile:
+ 
+<Kybot id="generic_kybot">
+ <variables>
+   <var name="X" type="term" pos="N"/>
+   <var name="Y" type="term" pos="V"/>
+ </variables>
+
+ <relations>
+   <root span="Y"/>
+   <rel span="X" pivot="Y" direction="preceding"/>
+   <predicate name="DOLCE-Lite.owl#participant-in" event="Y" filler="X"/>
+ </relations>
+ <...
+
+The xquery  generated from the profile will be:
+
+for $Y in collection()//term[(@pos="V")and (.//externalRef[@reftype="DOLCE-Lite.owl#participant-in"])]
+let $Y.reference:=substring(($Y//externalRef[@reftype="DOLCE-Lite.owl#participant-in"])[1]/@reference,1)
+for $X at $count1 in reverse($Y/preceding-sibling::term[(@pos="N")and (.//externalRef[@reftype="SubClassOf" and @reference=$Y.reference])])   
+...
+
+
+**Output
+
+The last section declares the format for the facts that the Kybot will
+generate. For example:
+
+<events>
+  <event target="$x/@tid" lemma="$x/@lemma" pos="$x/@pos"/>
+  <role target="$z/@tid" rtype="quantity"/>
+</events>
+
+which creates a new event for every matched pattern. The event spans to the
+tid of variable 'x' and has its lemma and pos. It also says that $z plays
+the role "quantity" of the event.
+
+** Efficiency issues and restrictions
+
+The root pivot variable has great influence on the general efficiency of the
+Kybot execution. In fact, when a Kybot is executed the first thing it does
+is to search in the document collection for every occurrence of the root
+pivot (the variable pointed by the 'span' attribute of the <root> element
+inside <relations>); then, for each match, it follows searching for the
+additional constrains specified by the several <rel> elements. Therefore, if
+this root pivot is refers to a very general term (for instance, terms whose
+lemma is 'the') the first search will return a big number of matches, and
+thus the query execution could be very slow. For the same reason, the root
+pivot can not be optional, nor a negated expression.
+

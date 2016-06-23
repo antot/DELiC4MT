@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Esaldia 4:
+
+The defences are surveyed regularly to check their condition.
+
+Atera:
+
+event: survey
+
+role: patient
+filler: defences
+
+ -->
+
+<Kybot id="benchmark_04a">
+ <variables>
+   <var name="A" type="term" lemma="defence"/>
+   <var name="B" type="term" lemma="be"/>
+   <var name="C" type="term" lemma="surveyed"/>
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="following" immediate="true" />
+   <rel span="C" pivot="B" direction="following" immediate="true" />
+ </relations>
+
+<events>
+  <event eid="" target="$C/@tid" pos="$C/@pos"/>
+  <role rid="" event="" target="$A/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

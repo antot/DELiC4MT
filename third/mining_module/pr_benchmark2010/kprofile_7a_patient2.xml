@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+Sentence 7:
+The actions that residents take every day affect nature and impact the health of local creeks, streams and rivers, and ultimately the Bay
+
+
+Result:
+
+event: affect
+
+role: actor
+filler: action
+
+Comments:
+      * problem with the relative clause ("that residents take every day"). I matched it word by word.
+      * adverbs are optional ("everyday")
+      * "affect" tagged incorrectly as N
+
+ -->
+
+<Kybot id="benchmark_07a">
+ <variables>
+   <var name="A" type="term" lemma="action"/>
+   <var name="B" type="term" lemma="affect"/>
+   <var name="C" type="term" pos="N"/>
+ </variables>
+
+ <relations>
+   <root span="A"/>
+   <rel span="B" pivot="A" direction="following" />
+   <rel span="C" pivot="B" direction="following" />
+  </relations>
+
+<events>
+  <event eid="" target="$B/@tid" lemma="$B/@lemma" pos="$B/@pos"/>
+  <role rid="" event="" target="$C/@tid" rtype="patient"/>
+</events>
+</Kybot>
+

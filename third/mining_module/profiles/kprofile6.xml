@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Kybot id="quantity-change001">
+ <variables>
+   <var name="x" type="term" pos="v" sense="00111597-v"/>
+   <var name="y" type="term" pos="p*"/>
+   <var name="z" type="term" lemma="*% | *percent"/>
+ </variables>
+
+ <relations>
+   <root span="x"/>
+   <rel span="z" pivot="y" direction="following" immediate="true" />
+   <rel span="y" pivot="x" direction="following" immediate="true" />
+ </relations>
+
+ <facts>
+   <fact id='quantity-change-001'>
+     <factval name='term' value='$z/@tid'/>
+     <factval name='quantity'
+              value='$z/@lemma'/>
+   </fact>
+ </facts>
+</Kybot>

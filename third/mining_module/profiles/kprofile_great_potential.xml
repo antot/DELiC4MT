@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Kybot id="used-against">
+ <variables>
+   <var name="X" type="term" lemma="the"/>
+   <var name="Y" type="term" lemma="great"/>
+   <var name="Z" type="term" lemma="! potential"/>
+ </variables>
+
+ <relations>
+   <!--  ( Y <- X) -> Z -->
+   <root span="Y"/>
+   <rel span="X" pivot="Y" direction="preceding" immediate="true"/>
+   <rel span="Z" pivot="Y" direction="following" immediate="true"/>
+ </relations>
+
+ <facts>
+   <fact id='the-great'>
+     <target tid="$Z/@tid" lemma='$Z/@lemma'/>
+   </fact>
+ </facts>
+</Kybot>
+
