@@ -25,6 +25,7 @@
 #
 # ---------
 # CHANGELOG
+# 20160623 do not discard long sentences. Otherwise the alignment may have less sentences than the KAF files. The user should deal with long sentences.
 # 20110315 discard sentences longer than 40 tokens (GIZA takes very long time)
 # 20110111 header
 # 20101220 changed seconds to nanoseconds in temp dir name
@@ -147,14 +148,14 @@ cp "$SC" "$WDIR/f.$SL"
 cp "$TC" "$WDIR/f.$TL"
 #echo "$SC" > "$WDIR/f.$SL"
 #echo "$TC" > "$WDIR/f.$TL"
-#SC=f.$SL
-#TC=f.$TL
+SC=f.$SL
+TC=f.$TL
 cd $WDIR
 
 #clean-corpus-n.perl work/corpus/news-commentary.tok fr en work/corpus/news-commentary.clean 1 40
-$FILTER_LONG_SENTS f $SL $TL f_clean 1 40 > filter_long_sents.log 2>&1
-SC=f_clean.$SL
-TC=f_clean.$TL
+#$FILTER_LONG_SENTS f $SL $TL f_clean 1 80 > filter_long_sents.log 2>&1
+#SC=f_clean.$SL
+#TC=f_clean.$TL
 
 #plain2snt.out nc.lw.en nc.lw.fr
 $PLAIN2SNT $SC $TC > plain.$SL-$TL.log 2>&1
